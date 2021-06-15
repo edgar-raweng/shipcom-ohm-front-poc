@@ -1,16 +1,17 @@
-
-import React from 'react'
-import { FormControl, Select, MenuItem } from '@material-ui/core/'
+import React, { useState, useEffect } from 'react'
+import { Select, MenuItem } from '@material-ui/core/'
 import './Home.scss'
 import resistance from '../../assets/resistor-color-diagram-bg.webp'
+import { getResistanceOHMSValueService } from '../../services/resistance.service'
 
 
 const Home = () => {
 
-    const [firstBand, setFirstBand] = React.useState(false)
-    const [secondBand, setSecondBand] = React.useState(false)
-    const [multiplierBand, setMultiplierBand] = React.useState(false)
-    const [toleranceBrand, setToleranceBand] = React.useState(false)
+    const [firstBand, setFirstBand] = useState(false)
+    const [secondBand, setSecondBand] = useState(false)
+    const [multiplierBand, setMultiplierBand] = useState(false)
+    const [toleranceBrand, setToleranceBand] = useState(false)
+    const [ohmsValue, setOhmsValue] = useState(false)
 
     const handleFirstBand = (event) => {
         setFirstBand(event.target.value)
@@ -28,12 +29,24 @@ const Home = () => {
         setToleranceBand(event.target.value)
     }
 
+    const callResistanceService = () =>{
+        getResistanceOHMSValueService(firstBand, secondBand, multiplierBand, toleranceBrand)
+        .then(res => {
+            setOhmsValue(res)
+        })
+    }
+
+    useEffect(() => {
+        if (firstBand && secondBand && multiplierBand && toleranceBrand) {
+            callResistanceService()
+        }
+    }, [firstBand, secondBand, multiplierBand, toleranceBrand])
+
     return (
         <div className='home'>
             <h2 className='title'>4 Strip Resistor Calculator</h2>
             <div className='body'>
                 <div className='resistor-params'>
-                    <FormControl>
                         <div className='first-band-selector'>
                             <h4>1st Band of Color</h4>
                             <Select className='select' labelId="first-band-selector" value={firstBand} onChange={handleFirstBand}>
@@ -98,7 +111,6 @@ const Home = () => {
                                 <MenuItem value='silver'>Silver</MenuItem>
                             </Select>
                         </div>
-                    </FormControl>
                 </div>
                 <div className='result'>
                     <div className='resistor-img'>
@@ -110,7 +122,7 @@ const Home = () => {
                     </div>
                     <div className='resistance'>
                         <h2>Resistance</h2>
-                        <h3>OHMS</h3>
+                        <h3>{ohmsValue} OHMS</h3>
                     </div>
                 </div>
             </div>
