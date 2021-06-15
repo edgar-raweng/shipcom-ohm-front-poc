@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Select, MenuItem } from '@material-ui/core/'
 import './Home.scss'
 import resistance from '../../assets/resistor-color-diagram-bg.webp'
@@ -7,11 +7,19 @@ import { getResistanceOHMSValueService } from '../../services/resistance.service
 
 const Home = () => {
 
-    const [firstBand, setFirstBand] = useState(false)
-    const [secondBand, setSecondBand] = useState(false)
-    const [multiplierBand, setMultiplierBand] = useState(false)
-    const [toleranceBrand, setToleranceBand] = useState(false)
-    const [ohmsValue, setOhmsValue] = useState(false)
+    const [firstBand, setFirstBand] = React.useState(false)
+    const [secondBand, setSecondBand] = React.useState(false)
+    const [multiplierBand, setMultiplierBand] = React.useState(false)
+    const [toleranceBrand, setToleranceBand] = React.useState(false)
+    const [ohmsValue, setOhmsValue] = React.useState(false)
+
+    const example = (value) => {
+        if (value) {
+            return true
+        } else {
+            return false
+        }
+    }
 
     const handleFirstBand = (event) => {
         setFirstBand(event.target.value)
@@ -36,7 +44,7 @@ const Home = () => {
         })
     }
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (firstBand && secondBand && multiplierBand && toleranceBrand) {
             callResistanceService()
         }
